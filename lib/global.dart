@@ -10,6 +10,8 @@ import 'dart:io';
 
 /// 全局配置
 class Global {
+  static UserProfile profile = UserProfile();
+
   /// 发布渠道
   static String channel = "xiaomi";
 
@@ -62,12 +64,24 @@ class Global {
     if (isFirstOpen) {
       StorageUtil().setBool(STORAGE_DEVICE_ALREADY_OPEN_KEY, true);
     }
+
+//    // 读取离线用户信息
+//    var _profileJSON = StorageUtil().getJSON(STORAGE_USER_PROFILE_KEY);
+//    if (_profileJSON != null) {
+//      profile = UserProfile.fromJson(_profileJSON);
+//      isOfflineLogin = true;
+//    }
+
     // android 状态栏为透明的沉浸
     if (Platform.isAndroid) {
       SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
       SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     }
-
   }
 
+//  // 持久化 用户信息
+//  static Future<bool> saveProfile(UserProfile user) {
+//    profile = user;
+//    return StorageUtil().setJSON(STORAGE_USER_PROFILE_KEY, profile.toJson());
+//  }
 }

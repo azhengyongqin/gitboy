@@ -1,12 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:gitboy/common/api/apis.dart';
+import 'package:gitboy/common/entity/entity.dart';
 import 'package:gitboy/common/font/iconfont.dart';
+import 'package:gitboy/common/provider/profile_provider.dart';
 import 'package:gitboy/common/utils/screen.dart';
 import 'package:gitboy/common/widgets/logo.dart';
 import 'package:gitboy/router/router.dart';
 import 'package:gitboy/router/router.gr.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
+import '../../global.dart';
 import './signup.dart';
 import '../../common/widgets/widgets.dart';
 
@@ -36,12 +41,30 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    _accountController.text = Global.profile?.loginReq?.username;
+    _passController.text = Global.profile?.loginReq?.password;
     _accountController.addListener(() {
       this._showClear = _accountController.text.length > 0;
       setState(() {});
     });
 
     super.initState();
+  }
+
+  _login() async {
+    if (!this._formKey.currentState.validate()) {
+      this._formKey.currentState.save();
+      return;
+    }
+    var resp = await UserAPI.login(
+        context: context,
+        params: new LoginReq(
+          username: _accountController.text,
+          password: _passController.text,
+        ));
+    if (resp != null) {
+      ExtendedNavigator.ofRouter<AppRouter>().pop();
+    }
   }
 
   Widget _backButton() {
@@ -78,11 +101,15 @@ class _LoginPageState extends State<LoginPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Icon(Icons.mail,color: Theme.of(context).primaryColor,size: duSetFontSize(32),),
+                Icon(
+                  Icons.mail,
+                  color: Theme.of(context).primaryColor,
+                  size: duSetFontSize(32),
+                ),
                 SizedBox(width: duSetWidth(18)),
                 Expanded(
                   child: TextFormField(
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.emailAddress,
                     controller: _accountController,
                     decoration: InputDecoration(
                       hintText: "邮箱",
@@ -99,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return '账号不能为空！';
+                        return '邮箱不能为空！';
                       }
                       return null;
                     },
@@ -113,7 +140,11 @@ class _LoginPageState extends State<LoginPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Icon(Icons.lock, color: Theme.of(context).primaryColor,size: duSetFontSize(32),),
+                Icon(
+                  Icons.lock,
+                  color: Theme.of(context).primaryColor,
+                  size: duSetFontSize(32),
+                ),
                 SizedBox(width: duSetWidth(18)),
                 Expanded(
                   child: TextFormField(
@@ -155,9 +186,7 @@ class _LoginPageState extends State<LoginPage> {
             btnFlatButtonWidget(
               context: context,
               title: '登\t录',
-              onPressed: () {
-                ExtendedNavigator.ofRouter<AppRouter>().pushHomePage();
-              },
+              onPressed: () => _login(),
             ),
           ],
         ),

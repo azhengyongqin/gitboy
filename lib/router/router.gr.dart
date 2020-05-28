@@ -11,12 +11,13 @@ import 'package:gitboy/page/welcome/welcome_page.dart';
 import 'package:gitboy/page/login/login_page.dart';
 import 'package:gitboy/page/home/home_page.dart';
 import 'package:gitboy/page/setting/setting_page.dart';
+import 'package:gitboy/router/auth_guard.dart';
 import 'package:gitboy/page/setting/setting_theme_page.dart';
 
 abstract class Routes {
-  static const welComePage = '/';
+  static const welComePage = '/wel-come-page';
   static const loginPage = '/login-page';
-  static const homePage = '/home-page';
+  static const homePage = '/';
   static const settingPage = '/setting-page';
   static const settingThemePage = '/setting-theme-page';
   static const all = {
@@ -31,7 +32,10 @@ abstract class Routes {
 class AppRouter extends RouterBase {
   @override
   Set<String> get allRoutes => Routes.all;
-
+  @override
+  Map<String, List<Type>> get guardedRoutes => {
+        Routes.settingPage: [AuthGuard],
+      };
   @Deprecated('call ExtendedNavigator.ofRouter<Router>() directly')
   static ExtendedNavigatorState get navigator =>
       ExtendedNavigator.ofRouter<AppRouter>();
@@ -56,10 +60,11 @@ class AppRouter extends RouterBase {
           return misTypedArgsRoute<LoginPageArguments>(args);
         }
         final typedArgs = args as LoginPageArguments ?? LoginPageArguments();
-        return MaterialPageRoute<dynamic>(
+        return CupertinoPageRoute<dynamic>(
           builder: (context) =>
               LoginPage(key: typedArgs.key, title: typedArgs.title),
           settings: settings,
+          fullscreenDialog: true,
         );
       case Routes.homePage:
         if (hasInvalidArgs<HomePageArguments>(args)) {

@@ -6,3 +6,4 @@ export 'storage.dart';
 export 'cache.dart';
 export 'proxy.dart';
 export 'jpush.dart';
+export 'gitee.dart';

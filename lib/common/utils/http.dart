@@ -51,7 +51,7 @@ class HttpUtil {
       /// 如果您想以"application/x-www-form-urlencoded"格式编码请求数据,
       /// 可以设置此选项为 `Headers.formUrlEncodedContentType`,  这样[Dio]
       /// 就会自动编码请求体.
-      contentType: 'application/json; charset=utf-8',
+      contentType: 'application/json;charset=utf-8',
 
       /// [responseType] 表示期望以那种格式(方式)接受响应数据。
       /// 目前 [ResponseType] 接受三种类型 `JSON`, `STREAM`, `PLAIN`.
@@ -74,7 +74,7 @@ class HttpUtil {
     dio.interceptors.add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       return options; //continue
     }, onResponse: (Response response) {
-      return beforResponse(response); // continue
+      return response; // continue
     }, onError: (DioError e) {
       ErrorEntity eInfo = createErrorEntity(e);
 
@@ -112,16 +112,6 @@ class HttpUtil {
         client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
       };
     }
-  }
-
-  /// 同一处理响应错误处理
-  dynamic beforResponse(Response response) {
-    var resp = BaseResponse.fromJson(response.data);
-    if (resp?.errcode != null && resp?.errcode != "00000") {
-      response.statusCode = 500;
-      return DioError(type: DioErrorType.RESPONSE, response: response, error: resp.errmsg);
-    }
-    return response; // continue
   }
 
   /*
@@ -164,6 +154,13 @@ class HttpUtil {
                 break;
               case 401:
                 {
+                  var resp = AuthErrorResp.fromJson(error.response.data);
+                  if (resp != null) {
+                    if (resp?.error == 'invalid_grant') {
+                      return ErrorEntity(code: errCode, message: "用户名或密码错误");
+                    }
+                    return ErrorEntity(code: errCode, message: resp.message ?? resp.errorDescription);
+                  }
                   return ErrorEntity(code: errCode, message: "没有权限");
                 }
                 break;
@@ -237,7 +234,7 @@ class HttpUtil {
   /// 读取本地配置
   Map<String, dynamic> getAuthorizationHeader(BuildContext context) {
     var headers;
-    String accessToken = Provider.of<ProfileProvider>(context, listen: false)?.userProfile?.accessToken;
+    String accessToken = Provider.of<ProfileProvider>(context, listen: false).userProfile?.loginResp?.accessToken;
     if (accessToken != null) {
       headers = {
         'Authorization': 'Bearer $accessToken',
@@ -255,7 +252,7 @@ class HttpUtil {
   Future get(
     String path, {
     @required BuildContext context,
-    dynamic params,
+    Map<String, dynamic> params,
     Options options,
     bool refresh = false,
     bool noCache = !CACHE_ENABLE,
@@ -272,11 +269,21 @@ class HttpUtil {
       "cacheKey": cacheKey,
       "cacheDisk": cacheDisk,
     });
+
+    /// 把 [assetToken] 添加到请求头
     Map<String, dynamic> _authorization = getAuthorizationHeader(context);
     if (_authorization != null) {
       requestOptions = requestOptions.merge(headers: _authorization);
     }
 
+    if (params['access_token'] == null) {
+      var profile = Provider.of<ProfileProvider>(context, listen: false).userProfile;
+      if (params == null) {
+        params = {'access_token': profile?.loginResp?.accessToken};
+      } else {
+        params['access_token'] = profile?.loginResp?.accessToken;
+      }
+    }
     var response = await dio.get(path, queryParameters: params, options: requestOptions, cancelToken: cancelToken);
     return response.data;
   }

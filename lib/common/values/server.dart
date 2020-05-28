@@ -1,1 +1,1 @@
-const SERVER_API_URL = 'http://192.168.0.245:8002';
+const SERVER_API_URL = 'https://gitee.com';

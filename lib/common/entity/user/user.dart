@@ -1,209 +1,184 @@
-import 'dart:convert';
+import 'package:gitboy/common/entity/entity.dart';
 
-import '../base/idata.dart';
+class UserResp {
+  int id;
+  String login;
+  String name;
+  String avatarUrl;
+  String url;
+  String htmlUrl;
+  String followersUrl;
+  String followingUrl;
+  String gistsUrl;
+  String starredUrl;
+  String subscriptionsUrl;
+  String organizationsUrl;
+  String reposUrl;
+  String eventsUrl;
+  String receivedEventsUrl;
+  String type;
+  bool siteAdmin;
+  Null blog;
+  Null weibo;
+  String bio;
+  int publicRepos;
+  int publicGists;
+  int followers;
+  int following;
+  int stared;
+  int watched;
+  String createdAt;
+  String updatedAt;
+  Null email;
 
-/// 用户登录请求
-class UserReq implements IData {
-  String account;
-  String password;
-
-  UserReq({
-    this.account,
-    this.password,
-  });
-
-  factory UserReq.fromJson(Map<String, dynamic> json) => UserReq(
-        account: json["account"],
-        password: json["password"],
-      );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "account": account,
-        "password": password,
-      };
-
-  @override
-  UserReq fromJson(Map<String, dynamic> json) => UserReq.fromJson(json);
-}
-
-class UserResp implements IData {
-  String accessToken;
-  User user;
-
-  UserResp({this.accessToken, this.user});
+  UserResp(
+      {this.id,
+      this.login,
+      this.name,
+      this.avatarUrl,
+      this.url,
+      this.htmlUrl,
+      this.followersUrl,
+      this.followingUrl,
+      this.gistsUrl,
+      this.starredUrl,
+      this.subscriptionsUrl,
+      this.organizationsUrl,
+      this.reposUrl,
+      this.eventsUrl,
+      this.receivedEventsUrl,
+      this.type,
+      this.siteAdmin,
+      this.blog,
+      this.weibo,
+      this.bio,
+      this.publicRepos,
+      this.publicGists,
+      this.followers,
+      this.following,
+      this.stared,
+      this.watched,
+      this.createdAt,
+      this.updatedAt,
+      this.email});
 
   UserResp.fromJson(Map<String, dynamic> json) {
-    accessToken = json['access_token'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    id = json['id'];
+    login = json['login'];
+    name = json['name'];
+    avatarUrl = json['avatar_url'];
+    url = json['url'];
+    htmlUrl = json['html_url'];
+    followersUrl = json['followers_url'];
+    followingUrl = json['following_url'];
+    gistsUrl = json['gists_url'];
+    starredUrl = json['starred_url'];
+    subscriptionsUrl = json['subscriptions_url'];
+    organizationsUrl = json['organizations_url'];
+    reposUrl = json['repos_url'];
+    eventsUrl = json['events_url'];
+    receivedEventsUrl = json['received_events_url'];
+    type = json['type'];
+    siteAdmin = json['site_admin'];
+    blog = json['blog'];
+    weibo = json['weibo'];
+    bio = json['bio'];
+    publicRepos = json['public_repos'];
+    publicGists = json['public_gists'];
+    followers = json['followers'];
+    following = json['following'];
+    stared = json['stared'];
+    watched = json['watched'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    email = json['email'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['access_token'] = this.accessToken;
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
-    }
+    data['id'] = this.id;
+    data['login'] = this.login;
+    data['name'] = this.name;
+    data['avatar_url'] = this.avatarUrl;
+    data['url'] = this.url;
+    data['html_url'] = this.htmlUrl;
+    data['followers_url'] = this.followersUrl;
+    data['following_url'] = this.followingUrl;
+    data['gists_url'] = this.gistsUrl;
+    data['starred_url'] = this.starredUrl;
+    data['subscriptions_url'] = this.subscriptionsUrl;
+    data['organizations_url'] = this.organizationsUrl;
+    data['repos_url'] = this.reposUrl;
+    data['events_url'] = this.eventsUrl;
+    data['received_events_url'] = this.receivedEventsUrl;
+    data['type'] = this.type;
+    data['site_admin'] = this.siteAdmin;
+    data['blog'] = this.blog;
+    data['weibo'] = this.weibo;
+    data['bio'] = this.bio;
+    data['public_repos'] = this.publicRepos;
+    data['public_gists'] = this.publicGists;
+    data['followers'] = this.followers;
+    data['following'] = this.following;
+    data['stared'] = this.stared;
+    data['watched'] = this.watched;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['email'] = this.email;
     return data;
   }
 
   @override
-  fromJson(Map<String, dynamic> json) => UserResp.fromJson(json);
+  String toString() {
+    return 'UserResp{id: $id, login: $login, name: $name, avatarUrl: $avatarUrl, url: $url, htmlUrl: $htmlUrl, followersUrl: $followersUrl, followingUrl: $followingUrl, gistsUrl: $gistsUrl, starredUrl: $starredUrl, subscriptionsUrl: $subscriptionsUrl, organizationsUrl: $organizationsUrl, reposUrl: $reposUrl, eventsUrl: $eventsUrl, receivedEventsUrl: $receivedEventsUrl, type: $type, siteAdmin: $siteAdmin, blog: $blog, weibo: $weibo, bio: $bio, publicRepos: $publicRepos, publicGists: $publicGists, followers: $followers, following: $following, stared: $stared, watched: $watched, createdAt: $createdAt, updatedAt: $updatedAt, email: $email}';
+  }
 }
 
-class User {
-  int id;
-  String name;
-  String account;
-  String password;
-  int sex;
-  int createUserId;
-  String createTime;
-  String phoneNumber;
-  String wechatNumber;
-  String photo1;
-  String attendanceNo;
-  String isEnabled;
-  int systemJobId;
-  int systemOrgId;
-  SystemOrg systemOrg;
-  List<SystemRoles> systemRoles;
-  List<int> allRoleId;
+class UserProfile {
+  UserResp user;
+  LoginReq loginReq;
+  LoginResp loginResp;
 
-  User(
-      {this.id,
-      this.name,
-      this.account,
-      this.password,
-      this.sex,
-      this.createUserId,
-      this.createTime,
-      this.phoneNumber,
-      this.wechatNumber,
-      this.photo1,
-      this.attendanceNo,
-      this.isEnabled,
-      this.systemJobId,
-      this.systemOrgId,
-      this.systemOrg,
-      this.systemRoles,
-      this.allRoleId});
+  UserProfile({this.user, this.loginReq, this.loginResp});
 
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    account = json['account'];
-    password = json['password'];
-    sex = json['sex'];
-    createUserId = json['create_user_id'];
-    createTime = json['create_time'];
-    phoneNumber = json['phone_number'];
-    wechatNumber = json['wechat_number'];
-    photo1 = json['photo1'];
-    attendanceNo = json['attendance_no'];
-    isEnabled = json['is_enabled'];
-    systemJobId = json['system_job_id'];
-    systemOrgId = json['system_org_id'];
-    systemOrg = json['system_org'] != null ? new SystemOrg.fromJson(json['system_org']) : null;
-    if (json['system_roles'] != null) {
-      systemRoles = new List<SystemRoles>();
-      json['system_roles'].forEach((v) {
-        systemRoles.add(new SystemRoles.fromJson(v));
-      });
-    }
-    allRoleId = json['all_role_id'].cast<int>();
+  UserProfile.fromJson(Map<String, dynamic> json) {
+    user = UserResp.fromJson(json['user']);
+    loginReq = LoginReq.fromJson(json['login_req']);
+    loginResp = LoginResp.fromJson(json['login_resp']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['account'] = this.account;
-    data['password'] = this.password;
-    data['sex'] = this.sex;
-    data['create_user_id'] = this.createUserId;
-    data['create_time'] = this.createTime;
-    data['phone_number'] = this.phoneNumber;
-    data['wechat_number'] = this.wechatNumber;
-    data['photo1'] = this.photo1;
-    data['attendance_no'] = this.attendanceNo;
-    data['is_enabled'] = this.isEnabled;
-    data['system_job_id'] = this.systemJobId;
-    data['system_org_id'] = this.systemOrgId;
-    if (this.systemOrg != null) {
-      data['system_org'] = this.systemOrg.toJson();
-    }
-    if (this.systemRoles != null) {
-      data['system_roles'] = this.systemRoles.map((v) => v.toJson()).toList();
-    }
-    data['all_role_id'] = this.allRoleId;
+    data['user'] = user?.toJson();
+    data['login_req'] = loginReq?.toJson();
+    data['login_resp'] = loginResp?.toJson();
     return data;
   }
 
   @override
-  fromJson(Map<String, dynamic> json) {
-    return UserResp.fromJson(json);
+  String toString() {
+    return 'UserProfile{user: $user, loginReq: $loginReq, loginResp: $loginResp}';
   }
 }
 
-class SystemOrg {
-  int id;
-  int sort;
-  String name;
-  String anotherName;
-  int fatherId;
-  String completeId;
-  String completeName;
+class AuthErrorResp {
+  String error;
+  String errorDescription;
+  String message;
 
-  SystemOrg({this.id, this.sort, this.name, this.anotherName, this.fatherId, this.completeId, this.completeName});
+  AuthErrorResp({this.error, this.errorDescription, this.message});
 
-  SystemOrg.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    sort = json['sort'];
-    name = json['name'];
-    anotherName = json['another_name'];
-    fatherId = json['father_id'];
-    completeId = json['complete_id'];
-    completeName = json['complete_name'];
+  AuthErrorResp.fromJson(Map<String, dynamic> json) {
+    error = json['error'];
+    errorDescription = json['error_description'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['sort'] = this.sort;
-    data['name'] = this.name;
-    data['another_name'] = this.anotherName;
-    data['father_id'] = this.fatherId;
-    data['complete_id'] = this.completeId;
-    data['complete_name'] = this.completeName;
-    return data;
-  }
-}
-
-class SystemRoles {
-  int id;
-  String name;
-  String code;
-  String remark;
-  bool undeletable;
-
-  SystemRoles({this.id, this.name, this.code, this.remark, this.undeletable});
-
-  SystemRoles.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    code = json['code'];
-    remark = json['remark'];
-    undeletable = json['undeletable'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['code'] = this.code;
-    data['remark'] = this.remark;
-    data['undeletable'] = this.undeletable;
+    data['error'] = this.error;
+    data['error_description'] = this.errorDescription;
+    data['message'] = this.message;
     return data;
   }
 }
