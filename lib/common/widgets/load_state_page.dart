@@ -19,7 +19,7 @@ class LoadStatePage extends StatefulWidget {
 
   LoadStatePage({
     Key key,
-    this.state,
+    @required this.state,
     this.successWidget,
     this.errorMsg,
     this.onError,

@@ -63,6 +63,9 @@ class UserResp {
       this.email});
 
   UserResp.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return;
+    }
     id = json['id'];
     login = json['login'];
     name = json['name'];

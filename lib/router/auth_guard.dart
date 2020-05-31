@@ -8,14 +8,14 @@ class AuthGuard extends RouteGuard {
   @override
   Future<bool> canNavigate(ExtendedNavigatorState navigator, String routeName, Object arguments) async {
     var _profileJSON = await StorageUtil().getJSON(STORAGE_USER_PROFILE_KEY);
+    print('本地数据：$_profileJSON');
     if (_profileJSON != null) {
       var profile = UserProfile.fromJson(_profileJSON);
-      if (profile.loginResp.accessToken != null) {
+      if (profile.user.login != null) {
         return true;
       }
     }
-
     ExtendedNavigator.ofRouter<AppRouter>().pushLoginPage();
-    return false;
+    return routeName == Routes.homePage;
   }
 }

@@ -92,7 +92,7 @@ dev_dependencies:
 
   # icons
   flutter_launcher_icons:
-
+  flutter_native_splash:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -113,7 +113,10 @@ flutter:
     - assets/images/
     - assets/svg/
     - assets/html/
-
+  fonts:
+    - family: iconfont
+      fonts:
+        - asset: assets/fonts/iconfont.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

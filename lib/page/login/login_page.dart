@@ -1,18 +1,15 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:gitboy/common/api/apis.dart';
 import 'package:gitboy/common/entity/entity.dart';
-import 'package:gitboy/common/font/iconfont.dart';
-import 'package:gitboy/common/provider/profile_provider.dart';
 import 'package:gitboy/common/utils/screen.dart';
+import 'package:gitboy/common/widgets/customClipper.dart';
 import 'package:gitboy/common/widgets/logo.dart';
-import 'package:gitboy/router/router.dart';
 import 'package:gitboy/router/router.gr.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
 import '../../global.dart';
-import './signup.dart';
 import '../../common/widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,7 +21,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with RouteAware {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// email的控制器
@@ -67,25 +64,25 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Back', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
-  }
+//  Widget _backButton() {
+//    return InkWell(
+//      onTap: () {
+//        ExtendedNavigator.ofRouter<AppRouter>().pop();
+//      },
+//      child: Container(
+//        padding: EdgeInsets.symmetric(horizontal: 10),
+//        child: Row(
+//          children: <Widget>[
+//            Container(
+//              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
+//              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+//            ),
+//            Text('Back', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
+//          ],
+//        ),
+//      ),
+//    );
+//  }
 
   // 登录表单
   Widget _buildInputForm() {
@@ -196,36 +193,53 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime lastPopTime;
+    // 高度去掉 顶部，底部导航
+    ScreenUtil.init(context, width: 375, height: 812, allowFontScaling: true);
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-        body: Container(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              child: Container(
-            width: double.infinity,
-            height: duSetHeight(350),
-            child: BezierContainer(),
-          )),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: duSetHeight(100)),
-                  Logo(),
-                  SizedBox(height: 60),
-                  _buildInputForm(),
-                ],
-              ),
+    return WillPopScope(
+      // ignore: missing_return
+      onWillPop: () async {
+        if (lastPopTime == null || DateTime.now().difference(lastPopTime) > Duration(seconds: 2)) {
+          lastPopTime = DateTime.now();
+          showToast(msg: '再按一次退出');
+        } else {
+          lastPopTime = DateTime.now();
+          // 退出app
+          await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        }
+      },
+      child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          body: Container(
+            height: height,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                    child: Container(
+                  width: double.infinity,
+                  height: duSetHeight(350),
+                  child: Gitboy(),
+                )),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(height: duSetHeight(70)),
+                        Logo(),
+                        SizedBox(height: 90),
+                        _buildInputForm(),
+                      ],
+                    ),
+                  ),
+                ),
+//              Positioned(top: 40, left: 0, child: _backButton()),
+              ],
             ),
-          ),
-          Positioned(top: 40, left: 0, child: _backButton()),
-        ],
-      ),
-    ));
+          )),
+    );
   }
 }

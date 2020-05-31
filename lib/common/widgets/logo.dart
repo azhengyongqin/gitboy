@@ -18,7 +18,7 @@ class Logo extends StatelessWidget {
           ),
           children: [
             TextSpan(
-              text: 'ti',
+              text: 'it',
               style: TextStyle(color: theme.textTheme.bodyText1.color, fontSize: 40),
             ),
             TextSpan(

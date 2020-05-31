@@ -11,3 +11,5 @@ export 'radio_group.dart';
 export 'bezierContainer.dart';
 export 'clipper.dart';
 export 'logo.dart';
+export 'avatar.dart';
+export 'repository_list_item.dart';

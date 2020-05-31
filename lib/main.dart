@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget buildMaterialApp({ThemeData theme, ThemeData darkTheme}) {
       return MaterialApp(
+        checkerboardOffscreenLayers: true,
         localeListResolutionCallback: (List<Locale> locales, Iterable<Locale> supportedLocales) {
           return Locale('zh', 'CN');
         },
