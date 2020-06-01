@@ -70,7 +70,7 @@ class _OschinaPageState extends State<OschinaPage> with AutomaticKeepAliveClient
                     RepositoryListItem(
                       avatarSrc: data.owner.newPortrait,
                       ownerName: data.owner.name,
-                      language: data.language,
+                      language: data?.language,
                       name: data.name,
                       description: data.description,
                       starsCount: data.starsCount,
